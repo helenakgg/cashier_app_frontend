@@ -1,13 +1,19 @@
 import './App.css';
-import './coba.css';
-import { LandingPage } from './page/Landingpage';
+import React, { Component } from 'react'
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
+import Home from './pages/Home'
+import Succes from './pages/Succes'
+import Navbar from './Component/Navbar';
 
-function App() {
-  return (
-    <div className="App">
-        <LandingPage/>
-    </div>
-  );
+
+export default class App extends Component {
+  render() {
+    return (
+      <div>
+        <Navbar/>
+        <Home/>
+      </div>
+    )
+  }
 }
 
-export default App;

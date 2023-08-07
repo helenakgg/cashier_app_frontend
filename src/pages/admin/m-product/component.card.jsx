@@ -1,7 +1,9 @@
 function ProductCard ({
     productName = "",
     description = "",
-    productImg = ""
+    productImg = "",
+    onClick = (productId) => {}
+
 }) {
     return (
         <div className="card w-96 bg-base-100 shadow-xl">
@@ -18,12 +20,12 @@ function ProductCard ({
 export default function RenderProductCard ({
     productList = [],
 }) {
-    return productList.map((products, index) => {
+    return productList.map((product, index) => {
         return (
-            <ProductCard key={products.productId}
-                productName={products.productName}
-                description={products.description}
-                productImg={products.productImg}
+            <ProductCard key={product.productId}
+                productName={product.productName}
+                description={product.description}
+                productImg={product.productImg}
             />
         )
     })

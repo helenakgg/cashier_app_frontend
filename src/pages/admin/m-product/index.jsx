@@ -1,8 +1,7 @@
 import { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { getProductList } from "../../../store/slices/admin/m-product/slices"
-
-// import Navbar from "../../components/navbar"
+import Navbar from "../../../components/navbar/navbar"
 
 // @local component
 import RenderProductCard from "./component.card"
@@ -13,29 +12,27 @@ function AdminProductPage () {
     const dispatch = useDispatch()
     const { loading, currentPage, totalPages, productList } = useSelector(state => {
         return {
-            loading : state.products?.isLoading,
-            productList : state.products?.productList,
-            currentPage : state.products?.currentPage,
-            totalPages : state.products?.totalPages,
+            loading : state.adminProduct?.isGetProductListLoading,
+            productList : state.adminProduct?.productList,
+            currentPage : state.adminProduct?.currentPage,
+            totalPages : state.adminProduct?.totalPages,
         }
     })
 
     // @side-effect
     useEffect(() => {
-        dispatch(getProductList({ id_cat : 3, page : 1, sort : "ASC", search : "" }))
+        dispatch(getProductList({ id_cat : "", page : "", sort : "", search : "" }))
     }, [])
 
     // @event handler
     const onChangePagination = (type) => {
         dispatch(getProductList({ 
-            id_cat : 3, 
+            id_cat : "", 
             page : type === "prev" ? currentPage - 1 : currentPage + 1, 
-            sort : "ASC",
+            sort : "",
             search : "" 
         }))
     }
-
-    // const onButtonLike = (id) => dispatch(likeArticle({ BlogId : id }))
 
     // @render loading
     if (loading) return (
@@ -46,7 +43,7 @@ function AdminProductPage () {
 
     return (
         <div className="w-full h-full px-40 py-10 flex flex-row flex-wrap gap-5 justify-between ">
-            {/* <Navbar /> */}
+            <Navbar />
             <RenderProductCard productList={productList}/>
             <div className="flex flex-row w-full h-auto justify-end">
                 <Pagination 

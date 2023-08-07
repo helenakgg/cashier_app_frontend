@@ -11,11 +11,11 @@ import AdminPage from "./pages/admin";
 import AdminCashierPage from "./pages/admin/m-cashier";
 import AdminCategoryPage from "./pages/admin/m-category";
 import AdminProductPage from "./pages/admin/m-product";
+import CashierPage from "./pages/cashier";
 import NotFoundPage from "./pages/not-found";
 
 // @import component
 import ProtectedRoute from "./protected.routes"
-import NavbarHeader from "./Component/navbar/navbar";
 
 // @import action
 import { keepLogin } from "./store/slices/auth/slices"
@@ -28,11 +28,19 @@ function App() {
 			isKeepLoginLoading : state.auth?.isKeepLoginLoading
 		}
 	})
+	const { role } = useSelector(state => {
+        return {
+            role : state.auth.role
+        }
+    })
 
 	// @side effect
 	useEffect(() => {
-		dispatch(keepLogin())
-	}, [])
+		const token = localStorage.getItem("token");
+		if (token) {
+		dispatch(keepLogin());
+		}
+	}, []);
 
 	if (isKeepLoginLoading) return (
 		<div className="h-screen w-screen flex flex-row align-bottom justify-center">
@@ -42,21 +50,23 @@ function App() {
 
     return (
         <div className="h-screen w-screen bg-gradient-to-b from-yellow-50 to-transparent dark:from-yellow-900">
-			<NavbarHeader/>
 			<Routes>
 				<Route 
 					path="/" 
 					element={
 						<ProtectedRoute>
-							<AdminPage/>
+							{
+							role == 1 ?
+							<AdminPage/> : <CashierPage/>
+							}
 						</ProtectedRoute>
 					} 
 				/>
 				<Route path="/login" element={<LoginPage />} />
 				<Route path="/forgot-password" element={<ForgotPasswordPage />} />
-				<Route path="/reset-password" element={<ResetPasswordPage/>} />
+				<Route path="/reset-password/:uuid" element={<ResetPasswordPage/>} />
 				<Route path="/admin/m-cashier" element={<AdminCashierPage/>} />
-				<Route path="/asdmin/m-category" element={<AdminCategoryPage/>} />
+				<Route path="/admin/m-category" element={<AdminCategoryPage/>} />
 				<Route path="/admin/m-product" element={<AdminProductPage />} />
 				<Route path="*" element={<NotFoundPage/>} />
 

@@ -1,81 +1,99 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
-  login,
-  keepLogin,
-  logout,
+    login,
+    keepLogin,
+    logout,
+    forgotPassword,
+    resetPassword,
 } from "./slices";
 
-// @import schema validation
-
 const INITIAL_STATE = {
-  isLoginLoading: false,
-  isKeepLoginLoading: false,
-  isLogoutLoading: false,
-  userId: null,
-  uuid: null,
-  username: "",
-  email: "",
-  profileImg: null,
-  isDisable: false,
-  role: "",
-  error: null,
-};
-
-// global error handler
-export const isErrorOccured = (action) => {
-  return action.type.endsWith("rejected");
-};
-
-// auth success
-const isAuthSuccess = (action) => {
-  return [
-    login.fulfilled.type,
-    keepLogin.fulfilled.type
-  ].includes(action.type);
+    isLoginLoading: false,
+    isKeepLoginLoading: false,
+    isLogoutLoading: false,
+    isForgotPasswordLoading: false,
+    isResetPasswordLoading: false,
+    userId: null,
+    uuid: null,
+    username: "",
+    email: "",
+    profileImg: null,
+    isDisable: false,
+    role: 0
 };
 
 const authSlice = createSlice({
-  name: "auth",
-  initialState: INITIAL_STATE,
-  reducers: {},
-  extraReducers: (builder) => {
-    builder
-      .addCase(login.pending, (state, action) => {
-        state.isLoginLoading = true;
-      })
-
-      .addCase(keepLogin.pending, (state, action) => {
-        state.isKeepLoginLoading = true;
-      })
-
-      .addCase(logout.pending, (state, action) => {
-        state.isLogoutLoading = true;
-      })
-      .addCase(logout.fulfilled, (state, action) => {
-        state = Object.assign(state, INITIAL_STATE);
-      })
-
-      // auth success handler
-      .addMatcher(isAuthSuccess, (state, action) => {
-        state.isKeepLoginLoading = false;
-        state.isLoginLoading = false;
-        state.userId = action.payload?.userId;
-        state.uuid = action.payload?.uuid;
-        state.username = action.payload?.username;
-        state.email = action.payload?.email;
-        state.profileImg = action.payload?.profileImg;
-        state.role = action.payload?.role;
-      })
-
-      // error handler
-      .addMatcher(isErrorOccured, (state, action) => {
-        state.isKeepLoginLoading = false;
-        state.isLoginLoading = false;
-        state.isLogoutLoading = false;
-        state.error = action.payload;
-        // console.error(action.payload);
-      });
-  },
+    name: "auth",
+    initialState: INITIAL_STATE,
+    extraReducers: {
+        [login.pending] : (state, action) => {
+            state.isLoginLoading = true            
+        },
+        [login.fulfilled] : (state, action) => {
+            state = Object.assign(state, {
+                isLoginLoading : false,
+                userId : action.payload?.userId,
+                uuid : action.payload?.uuid,
+                username : action.payload?.username,
+                email : action.payload?.email,
+                profileImg : action.payload?.profileImg,
+                isDisable : action.payload?.isDisable,
+                role : action.payload?.role
+            })
+        },
+        [login.rejected] : (state, action) => {
+            state.isLoginLoading = false
+        },
+        [keepLogin.pending] : (state, action) => {
+            state.isKeepLoginLoading = true
+        },
+        [keepLogin.fulfilled] : (state, action) => {
+            state = Object.assign(state,{
+                isKeepLoginLoading : false,
+                userId : action.payload?.userId,
+                uuid : action.payload?.uuid,
+                username : action.payload?.username,
+                email : action.payload?.email,
+                profileImg : action.payload?.profileImg,
+                isDisable : action.payload?.isDisable,
+                role : action.payload?.role
+            })
+        },
+        [keepLogin.rejected] : (state, action) => {
+            state.isKeepLoginLoading = false
+        },
+        [logout.pending] : (state, action) => {
+            state.isLogoutLoading = true
+        },
+        [logout.fulfilled] : (state, action) => {
+            state = Object.assign(state, INITIAL_STATE)
+        },
+        [logout.rejected] : (state, action) => {
+            state.isLogoutLoading = false
+        },
+        [forgotPassword.pending] : (state, action) => {
+            state.isForgotPasswordLoading = true
+        },
+        [forgotPassword.fulfilled] : (state, action) => {
+            state.isForgotPasswordLoading = false
+        },
+        [forgotPassword.rejected] : (state, action) => {
+            state.isForgotPasswordLoading = false
+        },
+        [resetPassword.pending] : (state, action) => {
+            state.isResetPasswordLoading = true
+        },
+        [resetPassword.fulfilled] : (state, action) => {
+            state.isResetPasswordLoading = false
+        },
+        [resetPassword.rejected] : (state, action) => {
+            state.isResetPasswordLoading = false
+        },
+    }
+  
+  
+  
+  
 });
 
 export default authSlice.reducer;

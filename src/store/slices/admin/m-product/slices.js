@@ -14,11 +14,11 @@ export const getProductList = createAsyncThunk(
             const { data } = await api.get("/admin/m-product?" + encodeURI(PARAMETER))
             
             // @return data
-            return data
+            return data.result
         } catch (error) {
             console.error(error)
-            Toast.error("Error : something went wrong.")
-            return rejectWithValue(error.response.data)
+            Toast.error(error.response.data.message)
+            return rejectWithValue(error.response ? error.response.data : error)
         }
     }
 )

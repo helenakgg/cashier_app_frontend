@@ -1,37 +1,33 @@
 import { createSlice } from "@reduxjs/toolkit";
-import Toast from "react-hot-toast";
 
-// @import async thunk
 import { getProductList } from "./slices"
-import { isErrorOccured } from "../../auth";
 
 const INITIAL_STATE = {
     productList : [],
     totalPages : 1,
     currentPage : 1,
-    isLoading : false,
+    isGetProductListLoading : false,
 }
 
 const adminProductSlice = createSlice({
-    name : "products",
+    name : "adminProduct",
     initialState : INITIAL_STATE,
-    extraReducers : builder => {
-        builder.addCase(getProductList.pending, (state, action) => {
-            state.isLoading = true
-        })
-        builder.addCase(getProductList.fulfilled, (state, action) => {
-            state.isLoading = false
-            state.productList = action.payload?.result
-            state.totalPages = action.payload?.page
-            state.currentPage = action.payload?.productPage
-        })
-        builder.addMatcher(isErrorOccured, (state, action) => {
-            state.isLoading = false
-            
-            // @console error
-            console.error(action.payload)
-            Toast.error(action.payload?.message || "Error : something went wrong.")
-        })
+    extraReducers : {
+        [getProductList.pending] : (state, action) => {
+            state.isGetProductListLoading = true            
+        },
+        [getProductList.fulfilled] : (state, action) => {
+            state = Object.assign(state, {
+                isGetProductListLoading : false,
+                productList : action.payload?.result,
+                totalPages : action.payload?.totalPages,
+                currentPage : action.payload?.currentPage
+
+            })
+        },
+        [getProductList.rejected] : (state, action) => {
+            state.isGetProductListLoading = false
+        },
     }
 })
 

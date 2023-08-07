@@ -1,15 +1,15 @@
 import { configureStore } from "@reduxjs/toolkit"
 
 // @import all reducer from slices
-// import usersReducer from "./slices/users"
 import authReducer from "./slices/auth"
+import adminCashierReducer from "./slices/admin/m-cashier"
 import adminProductReducer from "./slices/admin/m-product"
 
 // @create store
 const store = configureStore({
     reducer : {
-        // users : usersReducer,
         auth : authReducer,
+        adminCashier : adminCashierReducer,
         adminProduct : adminProductReducer,
     },
 })

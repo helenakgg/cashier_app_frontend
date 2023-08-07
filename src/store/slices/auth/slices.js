@@ -20,8 +20,8 @@ export const login = createAsyncThunk(
 
             return data?.user
         } catch (error) {
-            // console.error(error.response ? error.response.data : error)
-            // Toast.error("Error : something went wrong.")
+            console.error(error)
+            Toast.error(error.response.data.message)
             return rejectWithValue(error.response ? error.response.data : error)
         }
     }
@@ -32,12 +32,12 @@ export const keepLogin = createAsyncThunk(
     async (payload, { rejectWithValue }) => {
         try {
             // @get user data with token
-            const { data } = await api.get("/auth/keep-login")
+            const { data } = await api.get("/auth")
 
-            return data
+            return data.user
         } catch (error) {
-            // console.error(error.response ? error.response.data : error)
-            // Toast.error("Error : something went wrong.")
+            console.error(error)
+            Toast.error(error.response.data.message)
             return rejectWithValue(error.response ? error.response.data : error)
         }
     }
@@ -52,7 +52,40 @@ export const logout = createAsyncThunk(
 
             return {}
         } catch (error) {
-            // console.error(error.response ? error.response.data : error)
+            console.error(error)
+            return rejectWithValue(error.response ? error.response.data : error)
+        }
+    }
+)
+
+export const forgotPassword = createAsyncThunk(
+    "auth/forgot-password",
+    async(payload, { rejectWithValue }) => {
+        try {
+            const { data } = await api.put("/auth/forgot-password", payload)
+            
+            Toast.success(data.message)
+
+            return data?.data
+        } catch (error) {
+            console.error(error)
+            Toast.error(error.response.data.message)
+            return rejectWithValue(error.response ? error.response.data : error)
+        }
+    }
+)
+
+export const resetPassword = createAsyncThunk(
+    "auth/reset-password",
+    async(payload, { rejectWithValue }) => {
+        try {
+            const { data } = await api.patch("/auth/reset-password", payload)
+
+            Toast.success(data.message)
+            return data
+        } catch (error) {
+            console.error(error)
+            Toast.error(error.response.data.message)
             return rejectWithValue(error.response ? error.response.data : error)
         }
     }
